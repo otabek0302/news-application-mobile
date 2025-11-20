@@ -1,211 +1,196 @@
-# Welcome to your Expo app 👋
+# News App (Expo / React Native)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A cross-platform React Native news application built with Expo and TypeScript. Uses file-based routing from expo-router and fetches news from an external News API. Clean architecture with components, services, and custom hooks for maintainability.
 
-## Get started
+---
 
-1. Install dependencies
+## Features
 
-   ```bash
+- Fetch and display latest news articles
+- Category filtering (e.g., Technology, Sports, Business)
+- Article detail screen with full content and webview
+- Smooth navigation using expo-router / React Navigation
+- TypeScript + strict typing
+- Works on Android, iOS, and web (Expo)
+
+---
+
+## Tech stack
+
+- Expo (managed workflow) — see app.json
+- React Native
+- TypeScript
+- expo-router
+- Axios / Apisauce (HTTP client)
+- react-native-webview
+- react-native-gesture-handler, reanimated, safe-area-context, etc.
+
+Key files:
+- package.json — project scripts & dependencies
+- tsconfig.json — TypeScript config (extends expo/tsconfig.base)
+- app/ — entry and routes (expo-router)
+- services/GlobalApi.ts — API helper/service
+- constants/Colors.ts — color constants
+- components/ — UI components
+- assets/ — images & fonts
+- eas.json — EAS build configuration
+
+---
+
+## Prerequisites
+
+- Node.js (recommended LTS)
+- npm (or yarn / pnpm)
+- Expo CLI or use `npx expo` directly
+- For native builds: Xcode (macOS) or Android Studio
+- (Optional) EAS CLI for production builds
+
+---
+
+## Quick start (development)
+
+1. Clone
+   git clone https://github.com/otabek0302/news-application-mobile.git
+   cd news-application-mobile
+
+2. Install
    npm install
-   ```
 
-2. Start the app
+3. Start Metro / Dev server
+   npm start
+   or
+   npx expo start
 
-   ```bash
-    npx expo start
-   ```
+4. Run
+   - Android emulator / device: npx expo run:android or open from Expo Dev Tools
+   - iOS simulator: npx expo run:ios (macOS) or use Expo Dev Tools to open simulator
+   - Expo Go: scan QR code from the dev tools
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-
-
-
-# React Native News App
-
-This is a **React Native News App** that fetches and displays the latest news articles using a News API. The app includes features like category-based filters, detailed news screens, and smooth navigation.
+Notes:
+- This project uses expo-router file-based routing — edit files in the app/ directory to add pages/routes.
 
 ---
 
-## Features 🚀
+## Scripts (from package.json)
 
-- Fetch and display the latest news articles
-- Filter articles by categories (e.g., Technology, Sports, Business)
-- Detailed screen for full article view
-- Smooth navigation between screens using React Navigation
-- Clean and maintainable code with custom hooks
-- Supports both **Android** and **iOS**
+- start: expo start
+- android: expo start --android
+- ios: expo start --ios
+- web: expo start --web
+- test: jest --watchAll
+- lint: expo lint
+- reset-project: node ./scripts/reset-project.js
 
----
-
-## Screenshots 📸
-
-| **Home Screen**            | **Detail Screen**           |
-|----------------------------|-----------------------------|
-| ![Home Screen](https://i.ibb.co/LXX8p9tz/Simulator-Screenshot-i-Phone-15-2025-03-05-at-13-22-58.png) | ![Detail Screen](https://i.ibb.co/7xqK9Rj1/Simulator-Screenshot-i-Phone-15-2025-03-05-at-13-22-55.png) |
+Run scripts with npm, or prefix with npx when necessary:
+npm run start
 
 ---
 
-## Getting Started ⚡
+## Environment / API key
 
-Follow the steps below to set up the project.
+This app fetches news from an external News API (e.g., NewsAPI.org). Add your API key before running:
 
-### Prerequisites
-- Node.js (https://nodejs.org)
-- React Native CLI (https://reactnative.dev/docs/environment-setup)
-- Android Studio (for Android) or Xcode (for iOS)
+Option A — Edit service file
+- Open services/GlobalApi.ts (or the relevant API file in services/) and replace the placeholder API key with your key, or provide a configuration constant.
 
----
+Example (pseudo):
+const API_KEY = 'YOUR_API_KEY';
+export const BASE_URL = `https://newsapi.org/v2/...&apiKey=${API_KEY}`;
 
-### 1. Clone the Repository 🛠️
-```bash
-git clone https://github.com/yourusername/news-app-react-native.git
-cd news-app-react-native
-```
+Option B — Use environment variables (recommended)
+1. Create a .env file at the project root:
+   EXPO_PUBLIC_NEWS_API_KEY=your_api_key_here
 
----
+2. Read it at runtime:
+- For Expo-managed apps you can use expo-constants or the built-in Expo config to surface public env values, or use expo-config-plugins.
+- Example using process.env (with appropriate bundler setup) or using a library like react-native-dotenv.
 
-### 3. Add Your API Key 🔑
-1. Sign up at [NewsAPI.org](https://newsapi.org) to get a free API key.
-2. Replace `YOUR_API_KEY` in the file `newsApi.js` under `src/services`:
-
-```javascript
-const API_KEY = 'YOUR_API_KEY'; // Replace this with your NewsAPI key
-export const NEWS_API_URL = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`;
-```
-### 4. Run the App ▶️
-
-Run the following commands to launch the app:
-
-#### For Android:
-```bash
-npx react-native run-android
-```
-#### For iOS:
-```bash
-npx react-native run-ios
-```
-### Project Structure 🗂️
-
-The project is organized as follows for clarity and maintainability:
-
-NewsApp/
-│-- src/
-│   ├── components/          # Reusable UI components
-│   │   ├── NewsCard.js      # A card component for displaying articles
-│   ├── screens/             # App screens (pages)
-│   │   ├── HomeScreen.js    # Main screen displaying news articles
-│   │   ├── DetailScreen.js  # Detailed view of a selected news article
-│   ├── hooks/               # Custom React hooks
-│   │   ├── useFetchNews.js  # Hook for fetching news data
-│   ├── services/            # API service configurations
-│   │   ├── newsApi.js       # Handles API URL and requests
-│   ├── navigation/          # Navigation configurations
-│   │   ├── AppNavigator.js  # App navigation using React Navigation
-│   ├── App.js               # Entry point of the application
-├── assets/                  # Images, fonts, etc.
-├── package.json             # Project dependencies
-├── README.md                # Project documentation
-
-
-## How It Works ⚙️
-
-- **Home Screen**: Fetches and displays the latest news articles in a list.
-- **Filter Functionality**: Filter articles based on categories (e.g., `Technology`, `Sports`, `Business`).
-- **Detail Screen**: Navigate to the article details page when an item is clicked to view the full content.
-- **API Integration**: Fetches data using a custom API service and `Axios` from the NewsAPI.
-- **Navigation**: Implemented using `React Navigation` for smooth and intuitive screen switching.
+Make sure you never commit secret keys to git. For EAS builds, configure secrets via EAS.
 
 ---
 
-## Learnings 📚
+## EAS (Expo Application Services)
 
-Through this project, you will learn:
+This project contains eas.json with configured build profiles (development, preview, production). Example uses an EAS projectId in app.json and eas.json. To build using EAS CLI:
 
-- **React Native setup and development**: How to configure and run a React Native project.
-- **Fetching and displaying data from an external API**: Using `Axios` to retrieve data from the News API.
-- **React Navigation for screen routing**: Navigating between multiple screens smoothly.
-- **State management**: Managing data flow with `useState` and `useEffect`.
-- **Creating custom hooks**: Writing reusable hooks for cleaner and modular code.
-- **Best practices for scalable architecture**: Organizing components, services, hooks, and screens effectively.
+1. Install and login:
+   npm install -g eas-cli
+   eas login
 
----
+2. Configure credentials (once) and run:
+   eas build --platform android --profile production
+   eas build --platform ios --profile production
 
-## Dependencies 🛠️
-
-The following libraries and tools are used in this project:
-
-- **React Native**: Framework for building cross-platform mobile applications.
-- **React Navigation**: For smooth and seamless navigation between screens.
-- **Axios**: For making HTTP requests to fetch data from the News API.
-- **React Native Paper**: A library for implementing beautiful UI components.
-- **NewsAPI.org**: External API for retrieving the latest news articles.
-
-
-## API Credit 🔗
-
-This app uses the [NewsAPI.org](https://newsapi.org) for fetching the latest news articles. Sign up for a free API key to get started.
+For internal/dev builds use the development or preview profiles defined in eas.json.
 
 ---
 
-## License 📄
+## Project structure (top-level / important files)
 
-This project is licensed under the **MIT License**.  
-Feel free to use, modify, and distribute this code under the terms of the license.
+- .gitignore
+- README.md
+- package.json
+- package-lock.json
+- tsconfig.json
+- app.json
+- eas.json
+- app/
+  - +not-found.tsx
+  - _layout.tsx
+  - index.tsx
+  - news/ (route folder)
+- components/
+  - home/ (home-related components)
+- services/
+  - GlobalApi.ts
+- constants/
+  - Colors.ts
+- assets/
+  - fonts/
+  - images/
+    - icon.png, adaptive-icon.png, splash-icon.png, favicon.png (referenced by app.json)
+- scripts/
+  - reset-project.js (provided by create-expo-app starter)
+
+(Adjust the tree as you add more screens, hooks, and components.)
 
 ---
 
-## Contributing 🤝
+## Notes about routing & entry
 
-Contributions are welcome! If you'd like to contribute to this project, follow these steps:
+- The app uses expo-router for file-based routing. The app entry is configured via "main": "expo-router/entry" in package.json.
+- Edit and add screens inside the app/ directory to create routes automatically.
 
-1. **Fork the repository**.
+---
 
-2. **Create a new branch**:
-   ```bash
-   git checkout -b feature-name
+## Testing & Linting
 
-3. **Commit your changes**:
-   git commit -m "Add a new feature"
+- Tests: jest with jest-expo preset (script: npm run test)
+- Lint: expo lint (script: npm run lint)
 
-4. **Push to the branch**:
-   git push origin feature-name
+---
 
-5. **Open a Pull Request**:
-   Your contributions will be reviewed, and once approved, merged into the main branch.
+## Contributing
 
-## Contact 📧
-For questions, feedback, or suggestions, feel free to reach out:
+Contributions are welcome. Suggested workflow:
+1. Fork the repository
+2. Create a new branch: git checkout -b feature/your-feature
+3. Commit changes: git commit -m "Add: description"
+4. Push: git push origin feature/your-feature
+5. Open a Pull Request to the main branch
 
-Gmail: otabekjon0302@gmail.com
-Email: otabekjon2002@mail.ru
+Include meaningful commit messages and, where appropriate, tests.
+
+---
+
+## Contact
+
+For questions or feedback:
+- otabekjon0302@gmail.com
+- otabekjon2002@mail.ru
+
+---
+
+If you want, I can:
+- Create a ready-to-commit README.md file using the exact content above,
+- Or customize it with your preferred package manager (yarn / pnpm), CI badges, or additional developer instructions (how to wire the API key into the existing services/GlobalApi.ts). Which would you prefer?
